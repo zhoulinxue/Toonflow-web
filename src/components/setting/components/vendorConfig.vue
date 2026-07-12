@@ -1,6 +1,6 @@
 <template>
   <div class="modelServe">
-    <!-- 左侧供应商列表 -->
+    <!-- 宸︿晶渚涘簲鍟嗗垪琛?-->
     <div class="modelList">
       <div class="listFooter">
         <t-button block theme="primary" @click="handleAddVendor">
@@ -27,7 +27,7 @@
         <t-empty v-else :title="$t('settings.vendor.noVendor')" style="margin-top: 16px"></t-empty>
       </div>
     </div>
-    <!-- 右侧配置面板 -->
+    <!-- 鍙充晶閰嶇疆闈㈡澘 -->
     <div v-if="currentVendor" class="modelParameter">
       <div class="configuration">
         <t-form :data="currentVendor" labelAlign="top">
@@ -126,7 +126,7 @@
       </div>
     </div>
 
-    <!-- 添加模型弹窗 -->
+    <!-- 娣诲姞妯″瀷寮圭獥 -->
     <t-dialog
       placement="center"
       width="40vw"
@@ -236,14 +236,14 @@
       </div>
     </t-dialog>
 
-    <!-- 文本模型测试弹窗 -->
+    <!-- 鏂囨湰妯″瀷娴嬭瘯寮圭獥 -->
     <TextModelTest
       v-if="testingModel?.type === 'text' && textTestVisible"
       v-model:modelVisible="textTestVisible"
       :vendorId="currentVendor!.id"
       :modelName="testingModel.modelName" />
 
-    <!-- 图像模型测试弹窗 -->
+    <!-- 鍥惧儚妯″瀷娴嬭瘯寮圭獥 -->
     <ImageModelTest
       v-if="testingModel?.type === 'image' && imageTestVisible"
       v-model:modelVisible="imageTestVisible"
@@ -251,7 +251,7 @@
       :modelName="testingModel.modelName"
       :supportedModes="(testingModel as any).mode || []" />
 
-    <!-- 视频模型测试弹窗 -->
+    <!-- 瑙嗛妯″瀷娴嬭瘯寮圭獥 -->
     <VideoModelTest
       v-if="testingModel?.type === 'video' && videoTestVisible"
       v-model:modelVisible="videoTestVisible"
@@ -259,7 +259,7 @@
       :modelName="testingModel.modelName"
       :rawModes="(testingModel as any).mode || []" />
 
-    <!-- 添加供应商弹窗 -->
+    <!-- 娣诲姞渚涘簲鍟嗗脊绐?-->
     <t-dialog
       width="30vw"
       placement="center"
@@ -270,13 +270,13 @@
       :maskClosable="false">
       <div class="data">
         <t-radio-group variant="default-filled" v-model="addMode">
-          <t-radio-button value="importAdd">通过文件导入</t-radio-button>
-          <t-radio-button value="linkAdd">通过链接添加</t-radio-button>
-          <t-radio-button value="codeAdd">通过代码添加</t-radio-button>
+          <t-radio-button value="importAdd">閫氳繃鏂囦欢瀵煎叆</t-radio-button>
+          <t-radio-button value="linkAdd">閫氳繃閾炬帴娣诲姞</t-radio-button>
+          <t-radio-button value="codeAdd">閫氳繃浠ｇ爜娣诲姞</t-radio-button>
         </t-radio-group>
         <div class="linkAdd" v-if="addMode == 'linkAdd'">
           <t-alert theme="warning" style="margin-bottom: 20px">
-            请填写 TypeScript 代码文件的链接（.ts 文件），不要填 API 地址或其他无关链接。 确认后 Toonflow 会自动加载该代码，请确保链接来源可信。
+            璇峰～鍐?TypeScript 浠ｇ爜鏂囦欢鐨勯摼鎺ワ紙.ts 鏂囦欢锛夛紝涓嶈濉?API 鍦板潃鎴栧叾浠栨棤鍏抽摼鎺ャ€?纭鍚?Toonflow 浼氳嚜鍔ㄥ姞杞借浠ｇ爜锛岃纭繚閾炬帴鏉ユ簮鍙俊銆?
           </t-alert>
           <t-input v-model="link" :placeholder="$t('settings.vendor.linkAddPlaceholder')"></t-input>
           <div style="margin-top: 10px; text-align: right; width: 100%">
@@ -338,6 +338,7 @@
 </template>
 
 <script setup lang="ts">
+import { useI18n } from "vue-i18n";
 import { MdPreview } from "md-editor-v3";
 import { CodeEditor } from "monaco-editor-vue3";
 import { DialogPlugin } from "tdesign-vue-next";
@@ -351,8 +352,9 @@ import TextModelTest from "./vendorTest/TextModelTest.vue";
 import ImageModelTest from "./vendorTest/ImageModelTest.vue";
 import VideoModelTest from "./vendorTest/VideoModelTest.vue";
 const { themeSetting } = storeToRefs(settingStore());
+const { t: $t } = useI18n();
 
-// ── 类型 ──
+// 鈹€鈹€ 绫诲瀷 鈹€鈹€
 interface TextModel {
   name: string;
   modelName: string;
@@ -394,11 +396,11 @@ interface VendorInput {
 }
 
 interface VendorItem {
-  id: string; //供应商唯一标识，必须全局唯一
+  id: string; //渚涘簲鍟嗗敮涓€鏍囪瘑锛屽繀椤诲叏灞€鍞竴
   author: string;
-  description?: string; //md5格式
+  description?: string; //md5鏍煎紡
   name: string;
-  icon?: string; //仅支持base64格式
+  icon?: string; //浠呮敮鎸乥ase64鏍煎紡
   code: string;
   inputs: VendorInput[];
   inputValues: Record<string, string>;
@@ -408,11 +410,11 @@ interface VendorItem {
   modelName?: string;
   model?: VendorModel[];
   models?: VendorModel[];
-  enable: number; //1启用 0禁用
+  enable: number; //1鍚敤 0绂佺敤
   version?: string;
 }
 
-// ── 常量 ──
+// 鈹€鈹€ 甯搁噺 鈹€鈹€
 const TYPE_LABEL_MAP: Record<string, string> = {
   text: "settings.vendor.textModel",
   image: "settings.vendor.imageModel",
@@ -440,7 +442,7 @@ function getModeLabel(mode: string, type: string) {
   const refMatch = String(mode).match(/^(videoReference|imageReference|audioReference):(\d+)$/);
   if (refMatch) {
     const label = MODE_LABEL_MAP[refMatch[1]];
-    return label ? `${$t(label)} ×${refMatch[2]}` : mode;
+    return label ? `${$t(label)} 脳${refMatch[2]}` : mode;
   }
   return MODE_LABEL_MAP[mode] ? $t(MODE_LABEL_MAP[mode]) : mode;
 }
@@ -486,7 +488,7 @@ const audioOptions: { label: string; value: "optional" | false | true }[] = [
   { label: "settings.vendor.noAudio", value: false },
 ];
 
-// ── 供应商列表 ──
+// 鈹€鈹€ 渚涘簲鍟嗗垪琛?鈹€鈹€
 const vendorList = ref<VendorItem[]>([]);
 
 const loading = ref(false);
@@ -525,7 +527,7 @@ const vendorModels = computed(() => currentVendor.value?.models || currentVendor
 const requiredInputs = computed(() => currentVendor.value?.inputs?.filter((input) => input.required) || []);
 const optionalInputs = computed(() => currentVendor.value?.inputs?.filter((input) => !input.required) || []);
 
-// ── 供应商弹窗 ──
+// 鈹€鈹€ 渚涘簲鍟嗗脊绐?鈹€鈹€
 const vendorDialogVisible = ref(false);
 const codeDialogVisible = ref(false);
 const vendorCode = ref(VENDOR_CODE_TEMPLATE);
@@ -538,7 +540,7 @@ const AUTO_SAVE_DELAY = 700;
 let autoSaveTimer: ReturnType<typeof setTimeout> | null = null;
 let pendingAutoSave = false;
 
-// ── 测试弹窗状态 ──
+// 鈹€鈹€ 娴嬭瘯寮圭獥鐘舵€?鈹€鈹€
 const testingModel = ref<VendorModel | null>(null);
 const textTestVisible = ref(false);
 const imageTestVisible = ref(false);
@@ -555,11 +557,11 @@ function getInputPlaceholder(input: VendorInput) {
 }
 
 /**
- * 检查字符串是否是有效的 base64 格式
+ * 妫€鏌ュ瓧绗︿覆鏄惁鏄湁鏁堢殑 base64 鏍煎紡
  */
 function isValidBase64(str?: string): boolean {
   if (!str) return false;
-  // 检查是否是 base64 数据 URI 或纯 base64 字符串
+  // 妫€鏌ユ槸鍚︽槸 base64 鏁版嵁 URI 鎴栫函 base64 瀛楃涓?
   const base64Regex = /^(?:data:[^;]+;base64,)?[A-Za-z0-9+/]*={0,2}$/;
   return base64Regex.test(str) && str.length > 0;
 }
@@ -733,7 +735,7 @@ function handleConfirmVendor() {
     });
   }
 }
-// ── 模型弹窗 ──
+// 鈹€鈹€ 妯″瀷寮圭獥 鈹€鈹€
 const modelDialogVisible = ref(false);
 const editingModelIndex = ref<number | null>(null);
 const editingModelName = ref<string | null>(null);
@@ -748,8 +750,8 @@ const modelFormData = ref({
   type: "text" as "text" | "image" | "video",
   think: false,
   mode: [] as string[],
-  mixedMode: [] as string[], // referenceOptions 选中项，单独存放，构建时作为数组元素加入 mode
-  mixedModeCount: {} as Record<string, number>, // 每个 reference 的数量限制
+  mixedMode: [] as string[], // referenceOptions 閫変腑椤癸紝鍗曠嫭瀛樻斁锛屾瀯寤烘椂浣滀负鏁扮粍鍏冪礌鍔犲叆 mode
+  mixedModeCount: {} as Record<string, number>, // 姣忎釜 reference 鐨勬暟閲忛檺鍒?
   audio: "optional" as "optional" | false | true,
   durationResolutionMap: [{ duration: [] as string[], resolution: [] as string[] }] as DrmRow[],
 });
@@ -811,7 +813,7 @@ function buildModelFromForm(): VendorModel | null {
     };
   }
 
-  // 把 mixedMode（referenceOptions 选中项）作为带数量的数组元素追加到 mode
+  // 鎶?mixedMode锛坮eferenceOptions 閫変腑椤癸級浣滀负甯︽暟閲忕殑鏁扮粍鍏冪礌杩藉姞鍒?mode
   const mode = [...modelFormData.value.mode].filter((m) => m !== "multiReference") as VideoModel["mode"];
   if (modelFormData.value.mixedMode.length > 0) {
     const refs = modelFormData.value.mixedMode.map((ref) => {
@@ -950,7 +952,7 @@ function handleEditModel(model: VendorModel) {
             resolution: [...map.resolution],
           }))
         : [{ duration: [], resolution: [] }];
-    // 反解：把 mode 中数组类型的元素提取为 mixedMode，其余为普通 mode
+    // 鍙嶈В锛氭妸 mode 涓暟缁勭被鍨嬬殑鍏冪礌鎻愬彇涓?mixedMode锛屽叾浣欎负鏅€?mode
     const flatMode: string[] = [];
     let mixedMode: string[] = [];
     const mixedModeCount: Record<string, number> = {};
@@ -1063,7 +1065,7 @@ function onBlurFn() {
       window.$message.error(`${$t("settings.vendor.msg.updateFailed")}${err.message}`);
     });
 }
-//是否启用供应商
+//鏄惁鍚敤渚涘簲鍟?
 function onChange(item: any, val: number) {
   const prevEnable = val === 1 ? 0 : 1;
   axios
@@ -1085,7 +1087,7 @@ watch(addMode, (val) => {
   else codeDialogVisible.value = false;
 });
 
-//链接读取
+//閾炬帴璇诲彇
 function linkRead() {
   if (linkReading.value) return;
   const firstConfirm = DialogPlugin.confirm({
@@ -1120,8 +1122,8 @@ function linkRead() {
               if (data.includes("<html>")) {
                 alertBox = DialogPlugin.alert({
                   theme: "danger",
-                  header: "链接返回了一个网页，添加供应商需要返回TS代码，请确认链接是否正确",
-                  body: "请勿输入中转站地址，如需使用中转站请修改OpenAI标准接口的baseUrl使用中转站地址",
+                  header: "閾炬帴杩斿洖浜嗕竴涓綉椤碉紝娣诲姞渚涘簲鍟嗛渶瑕佽繑鍥濼S浠ｇ爜锛岃纭閾炬帴鏄惁姝ｇ‘",
+                  body: "璇峰嬁杈撳叆涓浆绔欏湴鍧€锛屽闇€浣跨敤涓浆绔欒淇敼OpenAI鏍囧噯鎺ュ彛鐨刡aseUrl浣跨敤涓浆绔欏湴鍧€",
                   onConfirm: ({ e }) => {
                     alertBox.hide();
                   },
@@ -1129,7 +1131,7 @@ function linkRead() {
               } else {
                 DialogPlugin.alert({
                   theme: "danger",
-                  header: "链接返回的内容不正确，添加供应商需要返回TS代码，请确认链接是否正确",
+                  header: "閾炬帴杩斿洖鐨勫唴瀹逛笉姝ｇ‘锛屾坊鍔犱緵搴斿晢闇€瑕佽繑鍥濼S浠ｇ爜锛岃纭閾炬帴鏄惁姝ｇ‘",
                   onConfirm: ({ e }) => {
                     alertBox.hide();
                   },
@@ -1163,7 +1165,7 @@ function linkRead() {
   });
 }
 const uploadRef = ref();
-// 上传前校验并解析
+// 涓婁紶鍓嶆牎楠屽苟瑙ｆ瀽
 async function handleBeforeUpload(file: UploadFile) {
   const rawFile = file.raw;
   if (!rawFile) {
@@ -1187,7 +1189,7 @@ async function handleBeforeUpload(file: UploadFile) {
           confirmBtn: { content: $t("settings.vendor.msg.confirmAndAdd"), theme: "danger" },
           cancelBtn: $t("settings.vendor.msg.goBackCheck"),
           onConfirm: async () => {
-            //拿到上传的数据
+            //鎷垮埌涓婁紶鐨勬暟鎹?
             const fileReader = new FileReader();
             fileReader.readAsText(rawFile);
             fileReader.onload = () => {
@@ -1221,7 +1223,7 @@ async function handleBeforeUpload(file: UploadFile) {
   return false;
 }
 const fileList = ref<any[]>([]);
-// 触发上传
+// 瑙﹀彂涓婁紶
 function triggerUpload() {
   uploadRef.value?.triggerUpload();
 }
@@ -1231,7 +1233,7 @@ function requestMethod() {
     status: "success",
   } as const);
 }
-// 处理拖拽上传
+// 澶勭悊鎷栨嫿涓婁紶
 async function handleDrop(e: DragEvent) {
   const files = e.dataTransfer?.files;
   if (files && files.length > 0) {

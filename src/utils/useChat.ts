@@ -1,4 +1,4 @@
-// useChat.ts
+﻿// useChat.ts
 import { ref, shallowRef, onMounted, onUnmounted, computed } from "vue";
 import { io, Socket } from "socket.io-client";
 import type { ChatMessagesData, AIMessage, UserMessage, AIMessageContent, ChatMessageStatus } from "@tdesign-vue-next/chat";
@@ -627,7 +627,7 @@ export function useChat(options: UseChatOptions) {
 
   // 业务方法
   const chat = (content: string, attachments?: any[]) => {
-    if (!content.trim() && !attachments?.length) return false;
+    if (!content?.trim() && !attachments?.length) return false;
 
     const userMessage: UserMessage = {
       id: `user_${Date.now()}`,

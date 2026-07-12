@@ -907,7 +907,8 @@
       "cancelGeneration": "Cancel generation",
       "selectGenerating": "Select the item being generated",
       "noGenerating": "No data being generated",
-      "checkNumber": "Select quantity"
+      "checkNumber": "Select quantity",
+      "uploadImage": "Upload Image"
     },
     "script": {
       "searchPlaceholder": "Search script names...",

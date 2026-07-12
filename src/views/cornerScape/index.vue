@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="cornerScape f">
     <div class="left">
       <t-card shadow class="card">
@@ -232,6 +232,11 @@
                 <template #icon><t-icon name="edit" /></template>
                 {{ $t("workbench.cornerScape.aiPolish") }}
               </t-button>
+              <t-button theme="default" variant="outline" @click="triggerImageUpload" :disabled="currentItem.state == 'çæä¸­' ? true : false">
+                <template #icon><t-icon name="upload" /></template>
+                {{ $t("workbench.cornerScape.uploadImage") }}
+              </t-button>
+              <input ref="imageUploadInput" type="file" accept="image/*" style="display:none" @change="handleImageUpload" />
               <t-button theme="primary" @click="regenerateItem" :disabled="currentItem.state == '生成中' ? true : false">
                 <template #icon><t-icon name="refresh" /></template>
                 {{ $t("workbench.cornerScape.regenerate") }}
@@ -588,6 +593,43 @@ async function savePromptOnBlur() {
 }
 
 // AI 润色
+const imageUploadInput = ref(null);
+
+function triggerImageUpload() {
+  imageUploadInput.value?.click();
+}
+
+async function handleImageUpload(e) {
+  const input = e.target;
+  const file = input.files?.[0];
+  if (!file || !currentItem.value) return;
+  if (!file.type.startsWith("image/")) {
+    window.$message.warning("Please select an image file");
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = async () => {
+    const base64 = reader.result;
+    try {
+      await axios.post("/assets/uploadClip/image", {
+        type: currentItem.value.type ?? "props",
+        projectId: project.value?.id,
+        name: currentItem.value.name ?? "",
+        base64: base64,
+        id: currentItem.value.id,
+        resolution: editForm.resolution,
+      });
+      window.$message.success("Image uploaded");
+      await getFilteredData();
+    } catch (err) {
+      window.$message.error(err.message || "Upload failed");
+    } finally {
+      input.value = "";
+    }
+  };
+  reader.readAsDataURL(file);
+}
+
 const polishing = ref(false);
 async function polishPrompts() {
   if (!editForm.prompt.trim()) {

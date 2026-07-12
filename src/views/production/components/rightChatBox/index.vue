@@ -133,10 +133,10 @@ function handleReconnect() {
   });
 }
 
-//快捷发送
+//快捷发�?
 const handleActions = {
   suggestion: (data?: any) => {
-    productionAgentStore().chat(data?.content?.prompt);
+    productionAgentStore().chat(data?.prompt);
   },
 };
 
