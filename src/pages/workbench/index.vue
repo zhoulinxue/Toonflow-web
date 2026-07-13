@@ -1,65 +1,33 @@
 <template>
   <div class="main" :style="{ height: isElectron ? 'calc(100vh - 32px)' : '100vh' }">
-    <div class="menu fc jb">
-      <div class="logoBox c">
-        <div class="logo"></div>
-      </div>
-      <div class="itemBox fc ac">
-        <t-tooltip
-          :content="menu.labelKey ? $t(menu.labelKey) : ''"
-          placement="right"
-          destroyOnClose
-          :showArrow="false"
-          v-for="(menu, index) in menuList"
-          :key="index">
-          <div class="item fc c" v-if="menu.type === 'btn'" :class="{ active: activeMenu == menu.path }" @click="handleClick(menu)">
-            <component :is="menu.icon" class="icon" />
-          </div>
-          <div class="divider" v-if="menu.type === 'divider'"></div>
-        </t-tooltip>
-      </div>
-      <div class="footItem fc ac">
-        <t-tooltip :content="$t('workbench.menu.feedbackQuestions')" placement="right" destroyOnClose :showArrow="false">
-          <div class="item c" @click="openFeedback">
-            <i-bill class="icon" />
-          </div>
-        </t-tooltip>
-        <t-tooltip :content="$t('workbench.menu.settings')" placement="right" destroyOnClose :showArrow="false">
-          <div class="item c" @click="showSetting = true">
-            <t-badge :count="needUpdate ? 1 : 0" dot>
-              <i-setting-one class="icon" />
-            </t-badge>
-          </div>
-        </t-tooltip>
-        <t-tooltip :content="$t('workbench.menu.jumpGithub')" placement="right" destroyOnClose :showArrow="false">
-          <div class="item c" @click="jumpGithub">
-            <i-github-one class="icon" />
-          </div>
-        </t-tooltip>
-      </div>
-    </div>
     <div class="view">
+      <div class="navBar f fw">
+        <t-tooltip v-for="(menu, index) in menuList" :key="index" :content="menu.labelKey ? $t(menu.labelKey) : ''" placement="bottom" destroyOnClose :showArrow="false">
+          <div class="navBtn f ac" v-if="menu.type === 'btn'" :class="{ active: activeMenu == menu.path }" @click="handleClick(menu)">
+            <component :is="menu.icon" class="navIcon" />
+            <span class="navLabel">{{ menu.labelKey ? $t(menu.labelKey) : '' }}</span>
+          </div>
+        </t-tooltip>
+        <t-tooltip v-for="(menu, index) in rightBtnList" :key="'r'+index" :content="menu.labelKey ? $t(menu.labelKey) : ''" placement="bottom" destroyOnClose :showArrow="false">
+          <div class="navBtn f ac" v-if="menu.type === 'btn' && (project.projectType === 'novel' || !menu.nodelOnly)" :class="{ active: activeMenu == menu.path }" @click="handleClick(menu)">
+            <component :is="menu.icon" class="navIcon" />
+            <span class="navLabel">{{ menu.labelKey ? $t(menu.labelKey) : '' }}</span>
+          </div>
+          <div class="navDivider" v-if="menu.type === 'divider'"></div>
+        </t-tooltip>
+        <t-tooltip :content="$t('workbench.menu.feedbackQuestions')" placement="bottom" destroyOnClose :showArrow="false">
+          <div class="navBtn f ac" @click="openFeedback"><i-bill class="navIcon" /><span class="navLabel">{{ $t('workbench.menu.feedbackQuestions') }}</span></div>
+        </t-tooltip>
+        <t-tooltip :content="$t('workbench.menu.settings')" placement="bottom" destroyOnClose :showArrow="false">
+          <div class="navBtn f ac" @click="showSetting = true"><t-badge :count="needUpdate ? 1 : 0" dot><i-setting-one class="navIcon" /></t-badge><span class="navLabel">{{ $t('workbench.menu.settings') }}</span></div>
+        </t-tooltip>
+        <t-tooltip :content="$t('workbench.menu.jumpGithub')" placement="bottom" destroyOnClose :showArrow="false">
+          <div class="navBtn f ac" @click="jumpGithub"><i-github-one class="navIcon" /><span class="navLabel">{{ $t('workbench.menu.jumpGithub') }}</span></div>
+        </t-tooltip>
+      </div>
       <div class="topMenu f ac jb" v-if="project?.id">
         <div class="title">
           <h2>{{ project?.name || $t("workbench.selectProject") }}</h2>
-        </div>
-        <div class="rightBtnList f ac">
-          <t-tooltip
-            :content="menu.labelKey ? $t(menu.labelKey) : ''"
-            placement="bottom"
-            destroyOnClose
-            :showArrow="false"
-            v-for="(menu, index) in rightBtnList"
-            :key="index">
-            <div
-              class="item fc c"
-              v-if="menu.type === 'btn' && (project.projectType === 'novel' || !menu.nodelOnly)"
-              :class="{ active: activeMenu == menu.path }"
-              @click="handleClick(menu)">
-              <component :is="menu.icon" class="icon" />
-            </div>
-            <div class="divider" v-if="menu.type === 'divider'"></div>
-          </t-tooltip>
         </div>
       </div>
       <div class="viewBox">
@@ -202,6 +170,34 @@ onUnmounted(() => {
   width: 100vw;
   padding: 16px;
   display: flex;
+  flex-direction: column;
+
+  .navBar {
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--td-border-level-1-color);
+    margin-bottom: 8px;
+    .navBtn {
+      gap: 4px;
+      padding: 4px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.15s;
+      .navIcon { font-size: 18px; }
+      .navLabel { font-size: 13px; white-space: nowrap; }
+      &:hover { background-color: var(--td-bg-color-container-hover); }
+    }
+    .navBtn.active {
+      background-color: var(--td-brand-color);
+      color: var(--td-font-white-1);
+    }
+    .navDivider {
+      width: 1px; height: 20px;
+      background-color: var(--td-border-level-1-color);
+      margin: 0 4px; align-self: center;
+    }
+  }
 
   .menu {
     width: 64px;
@@ -270,7 +266,6 @@ onUnmounted(() => {
   }
   .view {
     flex: 1;
-    margin-left: 16px;
     background-color: var(--page);
     border-radius: 16px;
     width: 100%;
