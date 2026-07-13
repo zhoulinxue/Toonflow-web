@@ -603,11 +603,13 @@ export function useChat(options: UseChatOptions) {
 
   // 发送方法
   const emit = <E extends keyof ChatSocketEvents & string>(event: E, data?: ChatSocketEvents[E]) => {
+    console.log("[useChat.emit]", event, "connected:", socket.value?.connected);
     if (!socket.value?.connected) {
       console.warn("[Chat] Socket not connected");
       return false;
     }
     socket.value.emit(event, data);
+    console.log("[useChat.emit] sent successfully");
     return true;
   };
 
@@ -627,7 +629,8 @@ export function useChat(options: UseChatOptions) {
 
   // 业务方法
   const chat = (content: string, attachments?: any[]) => {
-    if (!content?.trim() && !attachments?.length) return false;
+    console.log("[useChat.chat] called, content:", content?.substring(0, 100));
+    if (!content?.trim() && !attachments?.length) { console.log("[useChat.chat] empty, returning false"); return false; }
 
     const userMessage: UserMessage = {
       id: `user_${Date.now()}`,

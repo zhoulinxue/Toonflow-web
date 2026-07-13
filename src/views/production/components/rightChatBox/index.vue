@@ -133,10 +133,29 @@ function handleReconnect() {
   });
 }
 
-//快捷发�?
+//快捷发�?
 const handleActions = {
   suggestion: (data?: any) => {
-    productionAgentStore().chat(data?.prompt);
+    console.log("[suggestion] clicked, data:", JSON.stringify(data));
+    window.$message.info("suggestion clicked, check console");
+    const prompt = data?.prompt || (data?.content && data.content.prompt);
+    console.log("[suggestion] prompt:", prompt);
+    if (!prompt || !prompt.trim()) {
+      console.error("[suggestion] no prompt found");
+      window.$message.error("No prompt in suggestion data");
+      return;
+    }
+    const store = productionAgentStore();
+    console.log("[suggestion] connected:", store.connected, "status:", store.status);
+    if (!store.connected) {
+      console.error("[suggestion] agent not connected");
+      window.$message.warning("Agent not connected yet");
+      return;
+    }
+    console.log("[suggestion] calling chat()");
+    const result = store.chat(prompt);
+    console.log("[suggestion] chat() returned:", result);
+    if (!result) { window.$message.error("Failed to send message"); }
   },
 };
 
